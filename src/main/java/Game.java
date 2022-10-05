@@ -12,10 +12,14 @@ import java.security.Key;
 
 public class Game {
     private Screen screen;
+    private Hero hero;
+    private Position position;
+
     private int x = 10;
     private int y = 10;
 
     public Game() throws IOException {
+        hero = new Hero(20,9);
         TerminalSize terminalSize = new TerminalSize(40, 20);
         DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory().setInitialTerminalSize(terminalSize);
         Terminal terminal = terminalFactory.createTerminal();
@@ -26,7 +30,7 @@ public class Game {
     }
     private void Draw() throws IOException {
         screen.clear();
-        screen.setCharacter(x, y, TextCharacter.fromCharacter('X')[0]);
+        hero.draw(screen);
         screen.refresh();
     }
     public void Run() throws IOException {
@@ -45,18 +49,21 @@ public class Game {
         System.out.println(key);
         switch (key.getKeyType()){
             case ArrowUp:
-                y -= 1;
+                moveHero(hero.moveUp());
                 break;
             case ArrowDown:
-                y += 1;
+                moveHero(hero.moveDown());
                 break;
             case ArrowLeft:
-                x -= 1;
+                moveHero(hero.moveLeft());
                 break;
             case ArrowRight:
-                x += 1;
+                moveHero(hero.moveRight());
                 break;
         }
+    }
 
+    private void moveHero(Position position) {
+        hero.setPosition(position);
     }
 }
