@@ -1,14 +1,14 @@
-import com.googlecode.lanterna.TextCharacter;
+import com.googlecode.lanterna.TerminalPosition;
+import com.googlecode.lanterna.TerminalSize;
+import com.googlecode.lanterna.TextColor;
+import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyStroke;
-import com.googlecode.lanterna.screen.Screen;
 
 public class Arena {
     private int width;
     private int height;
 
-    private Position position;
-
-    private Hero hero;
+    Hero hero = new Hero(10,10);
 
     public Arena(int width, int height){
         this.height = height;
@@ -16,8 +16,13 @@ public class Arena {
         hero = new Hero(10,10);
     }
 
-    public void Draw(Screen screen){
-        screen.setCharacter(hero.getPosition().getX(),hero.getPosition().getY(), TextCharacter.fromCharacter('X')[0]);
+    public void Draw(TextGraphics graphics){
+        graphics.setBackgroundColor(TextColor.Factory.fromString("#336699"));
+        graphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(width, height), ' ');
+        hero.draw(graphics);
+        graphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(width * 2, height * 2), ' ');
+        graphics.putString(new TerminalPosition(hero.getPosition().getX() * 2, hero.getPosition().getY() * 2), "\\/");
+        graphics.putString(new TerminalPosition(hero.getPosition().getX() * 2, hero.getPosition().getY() * 2 + 1), "/\\");
     }
     void processKey(KeyStroke key){
         System.out.println(key);
