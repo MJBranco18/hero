@@ -12,58 +12,39 @@ import java.security.Key;
 
 public class Game {
     private Screen screen;
-    private Hero hero;
-    private Position position;
+    Arena arena = new Arena(10,10);
 
-    private int x = 10;
-    private int y = 10;
+    Hero hero = new Hero(19, 9);
 
     public Game() throws IOException {
-        hero = new Hero(20,9);
         TerminalSize terminalSize = new TerminalSize(40, 20);
         DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory().setInitialTerminalSize(terminalSize);
         Terminal terminal = terminalFactory.createTerminal();
         screen = new TerminalScreen(terminal);
-        screen.setCursorPosition(null); // we don't need a cursor
-        screen.startScreen(); // screens must be started
+        screen.setCursorPosition(null);
+        screen.startScreen();
         screen.doResizeIfNecessary();
     }
+
     private void Draw() throws IOException {
         screen.clear();
-        hero.draw(screen);
+        arena.Draw(screen);
         screen.refresh();
     }
+
     public void Run() throws IOException {
-        Draw();
-        while(true){
+        while (true) {
+            Draw();
             KeyStroke key = screen.readInput();
             processKey(key);
-            Draw();
-            if (key.getKeyType() == KeyType.Character && key.getCharacter() == 'q'){
+            if (key.getKeyType() == KeyType.Character && key.getCharacter() == 'q') {
                 screen.close();
             }
             if (key.getKeyType() == KeyType.EOF) break;
         }
     }
-    private void processKey(KeyStroke key){
-        System.out.println(key);
-        switch (key.getKeyType()){
-            case ArrowUp:
-                moveHero(hero.moveUp());
-                break;
-            case ArrowDown:
-                moveHero(hero.moveDown());
-                break;
-            case ArrowLeft:
-                moveHero(hero.moveLeft());
-                break;
-            case ArrowRight:
-                moveHero(hero.moveRight());
-                break;
-        }
-    }
 
-    private void moveHero(Position position) {
-        hero.setPosition(position);
+    private void processKey(KeyStroke key) {
+        arena.processKey(key);
     }
 }
