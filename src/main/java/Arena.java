@@ -6,11 +6,13 @@ import com.googlecode.lanterna.input.KeyStroke;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Arena {
     private int width;
     private int height;
     private Hero hero;
+    private List<Coin> coins;
 
     private List<Wall> walls;
 
@@ -19,6 +21,15 @@ public class Arena {
         this.width = width;
         hero = new Hero(10,10);
         this.walls = createWalls();
+        this.coins = createCoins();
+    }
+
+    private List<Coin> createCoins() {
+        Random random = new Random();
+        ArrayList<Coin> coins = new ArrayList<>();
+        for (int i = 0; i < 5; i++)
+            coins.add(new Coin(random.nextInt(width - 2) + 1, random.nextInt(height - 2) + 1));
+        return coins;
     }
 
     public void Draw(TextGraphics graphics){
@@ -27,6 +38,8 @@ public class Arena {
         hero.draw(graphics);
         for (Wall wall : walls)
             wall.draw(graphics);
+        for (Coin coin : coins)
+            coin.draw(graphics);
     }
     void processKey(KeyStroke key){
         System.out.println(key);
@@ -56,6 +69,7 @@ public class Arena {
         for(Wall wall : walls) {
             if (wall.getPosition().equals(position)) return false;
         }
+        retrieveCoins();
         return true;
     }
 
@@ -70,5 +84,13 @@ public class Arena {
             walls.add(new Wall(width - 1, r));
         }
         return walls;
+    }
+    private void retrieveCoins() {
+        for (Coin coin : coins) {
+            if (coin.getPosition().equals(hero.getPosition())) {
+                coins.remove(coin);
+                break;
+            }
+        }
     }
 }
