@@ -10,7 +10,7 @@ import com.googlecode.lanterna.graphics.TextGraphics;
         }
 
         public void draw(TextGraphics graphics) {
-            graphics.setForegroundColor(TextColor.Factory.fromString("#FFFFFF"));
+            graphics.setForegroundColor(TextColor.Factory.fromString("#006400 "));
             graphics.enableModifiers(SGR.BOLD);
             graphics.putString(new TerminalPosition(position.getX(), position.getY()), "X");
         }
